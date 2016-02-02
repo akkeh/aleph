@@ -2,7 +2,7 @@
 CC=g++
 CFLAGS = -Wall -lao -ldl -lm
 
-OBJ = main.o singl.o atime.o 
+OBJ = main.o singl.o atime.o proc.o aout.o
 all: main 
 
 main: ${OBJ}
@@ -10,3 +10,9 @@ main: ${OBJ}
 
 .cpp.p:
 	${CC} -c $< ${CFlAGS}
+
+lib: soLib.cpp
+	${CC} -shared -fPIC -o soLib.so soLib.cpp
+
+clean:
+	rm -rf *.o

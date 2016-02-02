@@ -24,7 +24,8 @@ public:
     Singl* set_next(Singl* new_next);
     Singl* get_prev();
     Singl* get_next();
-private:
+
+protected:
     unsigned long t0;   // start-time
 
     // linked list stuff:

@@ -80,10 +80,12 @@ Singl* Singl::get_next() {
 
 int Singl::process(Time* t) {
     unsigned long n = t->update();
-    while(t0 > n) {
+    while(t0 > n) 
         n = t->update();
-        std::cout << "t0: " << t0 << " > t " << n << std::endl;
-    };
+
+    // $TODO$ process function
+    std::cout << "process!\n"; 
+
     if(next)
         next->process(t);
     return 0;
