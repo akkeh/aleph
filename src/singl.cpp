@@ -1,14 +1,17 @@
 #include <iostream>
 
+#include "aconv.h"
+#include "atime.h"
 #include "singl.h"
 
 Singl::Singl(unsigned long t_t0){
     t0 = t_t0;
+    prev = next = NULL;
 };
 
 Singl::~Singl() {
-    prev->set_next(next);
-    next->set_prev(prev);
+    if(prev) prev->set_next(next);
+    if(next) next->set_prev(prev);
 }
 
 Singl* Singl::add(Singl* newSingl, int dir) {
@@ -76,16 +79,13 @@ Singl* Singl::get_next() {
 };
 
 int Singl::process(Time* t) {
-
+    unsigned long n = t->update();
+    while(t0 > n) {
+        n = t->update();
+        std::cout << "t0: " << t0 << " > t " << n << std::endl;
+    };
+    if(next)
+        next->process(t);
+    return 0;
 };
 
-int main() {
-    Singl* e1 = new Singl(10);
-    Singl* e2 = new Singl(12);
-
-    e1->add(e2);
-    
-    std::cout << "t0 of e1: " << e1->get_time() << "\nt0 of next of e1 (e2): " << e1->get_next()->get_time() << std::endl;
-
-    std::cout << "succes\n";
-};

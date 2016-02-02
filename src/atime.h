@@ -34,11 +34,11 @@ class Time{
 /*
     mode 0: offline (render)
     mode 1: online (ctime CPU clock)
-*/    
-Time(int t_mode);
-~Time();
-unsigned long update();
-
+*/ 
+public:   
+    Time(int t_mode);
+    ~Time();
+    unsigned long update();
 private:
     unsigned long t0;   // creation time
     

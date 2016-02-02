@@ -1,6 +1,7 @@
 #include <ctime>
 #include <iostream>
 
+#include "aconv.h"
 #include "atime.h"
 /*
     mode 0: offline (render)
@@ -9,14 +10,24 @@
 
 Time::Time(int t_mode) {
     mode = t_mode;
+    switch(mode) {
+        case 0: // offline:
+            n = new sampleClock();
+            break;
+        case 1: // online
+            n = new cpuClock();
+            break;
+
+    };
 };
 
+Time::~Time() {
+    delete n;
+};
 
 unsigned long Time::update() {
-    
+    return n->update();
 };
-
-
 
 
 //-Clocks: ----------------------------------------------------|
@@ -41,14 +52,3 @@ unsigned long cpuClock::update() {
 };
 
 
-int main() {
-    Clock* C = new sampleClock();
-    unsigned long n = 0;
-    clock_t t0 = clock();
-    while(n < 44100) {
-        n = C->update();
-        std::cout << "t: " << n << std::endl;
-    }
-    std::cout << "dt: " << ((long double)(clock() - t0)) / CLOCKS_PER_SEC << std::endl;
-
-};
