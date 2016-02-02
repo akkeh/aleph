@@ -14,6 +14,8 @@ public:
     ~Singl();
      
     int process(Time* t);
+    virtual void proc();
+
     unsigned long get_time();  
 
     // linked list functions:

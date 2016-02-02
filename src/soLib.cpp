@@ -1,37 +1,59 @@
+
+#include <cmath>
+
 #include "aconv.h"
+#include "proc.h"
+#include "singl.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-class proc_playSine : public proc {
-    proc_playSine(double freq);
+class p_playSine : public proc {
+    p_playSine(double freq, unsigned long length);
 
-    void proc();
+    void add(); // add singl
      
-    void remove();
+    void remove();  // remove singl
 
 protected:
-    long* soundfile;
+    // stuff for the sine:
+    long* data;    // buffer to hold the data
     unsigned long N;
     int bitdepth;
 };
 
 
+class s_sample : public singl {
+public:
+    s_sample(long val, aOut* t_aout);
+    ~s_sample();
+
+    void proc();
+
+protected:
+    long val;
+    aOut* aout;
+};
+
 #ifdef __cplusplus
 }
 #endif
 
-proc_playSine::proc_playSine(char* filename) {
-      
- 
-    // create sub-singl.    
+p_playSine::p_playSine(double freq, unsigned long length) {
+    N = length;
+    bitdepth = std::pow(2, BITDEPTH);
+    data = new long[N];
+    for(unsigned long n=0; n<N; ++n) 
+        data[n] = (long)(std::sin((M_PI+M_PI) * freq * n / FS) * bitdepth);
+
+
 };
 
-void proc_playSound::proc() {
+void p_playSine::add() {
     
 };
 
-void proc_playSound::remove() {
+void p_playSine::remove() {
 
 };
