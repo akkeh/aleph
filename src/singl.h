@@ -16,7 +16,7 @@ public:
     int process(Time* t);
 
     virtual void proc() = 0;                    // t0
-    virtual void add(int argc, void** argv)= 0; // 'creation' time
+    // virtual void add(int argc, void** argv)= 0; // 'creation' time
     
     unsigned long get_time();  
 
@@ -40,10 +40,10 @@ protected:
 
 class sample : public Singl {
 public:
-    sample(unsigned long t_t0, long t_val, aOut* t_aout);
+    sample(unsigned long t_t0, long* t_val, aOut* t_aout);
     void proc(); 
 private:
-    long val;
+    long* val;
     aOut* aout;
 
 };

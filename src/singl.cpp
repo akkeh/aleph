@@ -87,7 +87,6 @@ int Singl::process(Time* t) {
         n = t->update();
 
         proc(); 
-    std::cout << "process!\n"; 
 
     if(next)
         next->process(t);
@@ -102,8 +101,11 @@ void Singl::add(int argc, void** argv) {
 
 //-------------------------------------------------------------|
 //- sample: ---------------------------------------------------|
-sample::sample(unsigned long t_t0, long t_val, aOut* t_aout) : Singl(t_t0) {
-    val = t_val;
+sample::sample(unsigned long t_t0, long* t_val, aOut* t_aout) : Singl(t_t0) {
+    val = new long[CHNN];    
+    for(unsigned long c=0; c<CHNN; ++c) {
+        val[c] = t_val[c];
+    }
     aout = t_aout;
 };
 

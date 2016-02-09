@@ -11,7 +11,7 @@ public:
     aOut();
     ~aOut();
 
-    virtual void add(unsigned long t, long val);    // add sample
+    virtual void add(unsigned long t, long* val);    // add sample
 
 protected:
     long* buf;          // buffer
@@ -27,7 +27,9 @@ class file_aO : public aOut {
 public:
     file_aO();
     ~file_aO();
-    void add(unsigned long n, long val);
+
+    void add(unsigned long n, long* val);
+    int write(const char* filename, unsigned long t0, unsigned long t1);
 };  // file_aO
 
 //-online -----------------------------------------------------|
