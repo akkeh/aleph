@@ -4,8 +4,9 @@
 
 
 int main() {
-    Singl e1(44100);
-    Singl e2(50000);
+
+    sample e1(44100, -1, new aOut());
+    sample e2(50000, 1, new aOut());
     
     e1.append(&e2);
     Time* t = new Time(1);

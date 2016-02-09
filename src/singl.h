@@ -14,8 +14,10 @@ public:
     ~Singl();
      
     int process(Time* t);
-    virtual void proc();
 
+    virtual void proc() = 0;                    // t0
+    virtual void add(int argc, void** argv)= 0; // 'creation' time
+    
     unsigned long get_time();  
 
     // linked list functions:
@@ -35,4 +37,14 @@ protected:
     Singl* next;
     
 }; 
+
+class sample : public Singl {
+public:
+    sample(unsigned long t_t0, long t_val, aOut* t_aout);
+    void proc(); 
+private:
+    long val;
+    aOut* aout;
+
+};
 #endif

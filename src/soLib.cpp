@@ -5,6 +5,8 @@
 #include "proc.h"
 #include "singl.h"
 
+#define so_playSine_ARGCOUNT 2
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,34 +26,27 @@ protected:
 };
 
 
-class s_sample : public singl {
-public:
-    s_sample(long val, aOut* t_aout);
-    ~s_sample();
-
-    void proc();
-
-protected:
-    long val;
-    aOut* aout;
-};
-
 #ifdef __cplusplus
 }
 #endif
 
-p_playSine::p_playSine(double freq, unsigned long length) {
-    N = length;
+p_playSine::p_playSine() {
     bitdepth = std::pow(2, BITDEPTH);
+};
+
+void p_playSine::add(int argc, void** argv) {
+    /*
+        [N, freq]
+            variable sinus dmv bus in argv?
+    */
+    if(argc < so_playSine_ARGCOUNT) {
+        return -1;
+    };
+    N = (unsigned long) argv[0];
+    double freq = (double) argv[1];
     data = new long[N];
     for(unsigned long n=0; n<N; ++n) 
         data[n] = (long)(std::sin((M_PI+M_PI) * freq * n / FS) * bitdepth);
-
-
-};
-
-void p_playSine::add() {
-    
 };
 
 void p_playSine::remove() {

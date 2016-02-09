@@ -1,14 +1,17 @@
+#ifndef AOUT_H_
+#define AOUT_H_
+
 /*
     Outputs
 */
-
 #include "aconv.h"
 
-
-class aOut {
+class aOut {    // dummy output
 public:
     aOut();
     ~aOut();
+
+    virtual void add(unsigned long t, long val);    // add sample
 
 protected:
     long* buf;          // buffer
@@ -16,7 +19,7 @@ protected:
     unsigned long chnn; // number of channels
     //unsigned long wp;    // write pointer
 
-};
+};  // aOut
 
 //-offline ----------------------------------------------------|
 class file_aO : public aOut {
@@ -24,8 +27,8 @@ class file_aO : public aOut {
 public:
     file_aO();
     ~file_aO();
-    void add_sample(long sample, unsigned long n);
-};
+    void add(unsigned long n, long val);
+};  // file_aO
 
 //-online -----------------------------------------------------|
 class libao_aO : public aOut {
@@ -34,8 +37,9 @@ public:
     libao_aO();
     ~libao_aO();
 
-    void add_sample(long sample, unsigned long n);
 
 private:
     unsigned long n0;   // start time of current buffer
-};
+};  // libao_aO
+
+#endif  // AOUT_H_

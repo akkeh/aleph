@@ -3,7 +3,10 @@
 #include "aconv.h"
 #include "atime.h"
 #include "singl.h"
+#include "aout.h"
 
+
+//- Singl: ----------------------------------------------------|
 Singl::Singl(unsigned long t_t0){
     t0 = t_t0;
     prev = next = NULL;
@@ -40,15 +43,15 @@ Singl* Singl::add(Singl* newSingl, int dir) {
     };
 };
 
+unsigned long Singl::get_time() {
+    return t0;
+};
+
 void Singl::prepend(Singl* newSingl) {
     newSingl->set_prev(prev);
     newSingl->set_next(this);
     
     prev = newSingl;
-};
-
-unsigned long Singl::get_time() {
-    return t0;
 };
 
 void Singl::append(Singl* newSingl) {
@@ -83,7 +86,7 @@ int Singl::process(Time* t) {
     while(t0 > n) 
         n = t->update();
 
-    // $TODO$ process function
+        proc(); 
     std::cout << "process!\n"; 
 
     if(next)
@@ -91,3 +94,19 @@ int Singl::process(Time* t) {
     return 0;
 };
 
+/*
+void Singl::add(int argc, void** argv) {
+    std::cout << "got " << argc << "arguments\n";
+};
+*/
+
+//-------------------------------------------------------------|
+//- sample: ---------------------------------------------------|
+sample::sample(unsigned long t_t0, long t_val, aOut* t_aout) : Singl(t_t0) {
+    val = t_val;
+    aout = t_aout;
+};
+
+void sample::proc() {
+    aout->add(t0, val);
+};

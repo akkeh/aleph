@@ -10,7 +10,7 @@
 
 // includes:
 #include "atime.h"
+#include "aout.h"
 #include "singl.h"
-
 
 #endif
