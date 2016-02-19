@@ -9,7 +9,7 @@
 //- Singl: ----------------------------------------------------|
 Singl::Singl(unsigned long t_t0, int argc, void** argv){
     t0 = t_t0;
-    prev = next = sub = nsub = NULL;
+    prev = next = sub = nsub = psub = NULL;
 };
 
 Singl::~Singl() {
@@ -22,9 +22,15 @@ Singl::~Singl() {
     if(next) next->set_prev(prev);
 }
 
+void Singl::removeFromList() {
+    if(prev) prev->set_next(next);
+    if(next) next->set_prev(prev);
+    prev = next = NULL;
+};
+
 Singl* Singl::add(Singl* newSingl, int dir) {
     const unsigned long new_t0 = newSingl->get_time();
-
+    
     if(dir == 0) {
         if(new_t0 < t0)
             add(newSingl, -1);
@@ -45,8 +51,9 @@ Singl* Singl::add(Singl* newSingl, int dir) {
             // $TODO$: trow error
             std::cout << "trow error!\n";
         }
+        
     };
-};
+};  // Singl::add();
 
 Singl* Singl::add_sub(Singl* newSub, int dir) {
     const unsigned long new_t0 = newSub->get_time();
@@ -64,7 +71,7 @@ Singl* Singl::add_sub(Singl* newSub, int dir) {
                 append_sub(newSub);
         } else if(dir == -1) {
                 if(psub)
-                    prev->add_sub(newSub, -1);
+                    psub->add_sub(newSub, -1);
                 else
                     prepend_sub(newSub);
         } else {
@@ -74,11 +81,23 @@ Singl* Singl::add_sub(Singl* newSub, int dir) {
     };
 };
 
+void Singl::readdSubs() {
+    if(sub) {
+        Singl* s = sub;
+        while(s) {
+            s->removeFromList();
+            this->add(s);
+            s = s->get_nsub();
+        };
+    };
+};
+
 unsigned long Singl::get_time() {
     return t0;
 };
 
 void Singl::prepend(Singl* newSingl) {
+    
     newSingl->set_prev(prev);
     newSingl->set_next(this);
     
@@ -133,6 +152,10 @@ Singl* Singl::get_prev() {
     return prev;
 };
 
+Singl* Singl::get_psub() {
+    return psub;
+};
+
 Singl* Singl::get_next() {
     return next;
 };
@@ -140,6 +163,8 @@ Singl* Singl::get_next() {
 Singl* Singl::get_nsub() {
     return nsub;
 };
+
+
 
 int Singl::process(Time* t) {
     unsigned long n = t->update();
@@ -152,12 +177,6 @@ int Singl::process(Time* t) {
         next->process(t);
     return 0;
 };
-
-/*
-void Singl::add(int argc, void** argv) {
-    std::cout << "got " << argc << "arguments\n";
-};
-*/
 
 //-------------------------------------------------------------|
 //- Sample: ---------------------------------------------------|

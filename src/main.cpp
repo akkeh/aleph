@@ -20,10 +20,13 @@ int main() {
     };
     */
 
-    std::string soLibName;
+    std::string soLibName = "./soLib.so";
     load:
     std::cout << "Path to shared object file: $ ";
-    std::cin >> soLibName;
+    if(soLibName.empty())
+        std::cin >> soLibName;
+    else
+        std::cout << soLibName << std::endl;
     std::cout << "loading: " << soLibName << std::endl;   
     void* soHandle = dlopen(soLibName.c_str(), RTLD_NOW);
     if(!soHandle) {
@@ -34,21 +37,46 @@ int main() {
     dlerror();  // flush errors
     const char* dlerr;
     
-    Singl_constr constr = (Singl_constr) dlsym(soHandle, "con_simpleSine"); 
+    Singl_constr constr = (Singl_constr) dlsym(soHandle, "con_printName");
     
-    void** argv = new void*[3];
+    void** argv = new void*[2];
     unsigned long N = 10;
-    double freq = 200;
+    const char* name = "test";
     argv[0] = (void*) &N;
-    argv[1] = (void*) &freq;
-    argv[2] = (void*) output;
+    argv[1] = (void*) name;
 
     std::cout << "constructing\n";
-    Singl* sine = constr(0, 3, argv);
-    Time* t = new Time(1);
+    Singl* pName = constr(0, 2, argv);
+    Time* t = new Time(0);
     // samples[0]->process(t);
-    sine->process(t);
+    Singl* s = pName;
+    while(s) {
+        std::cout << "next: " << s->get_time() << std::endl;
+        s = s->get_next();
+    }
+    
+    void** argv2 = new void*[2];
+    unsigned long N2 = 2;
+    const char* name2 = "test2";
+    argv2[0] = (void*) &N2;
+    argv2[1] = (void*) name2;
+    Singl* pName2 = constr(5, 2, argv2); 
 
-    //((file_aO*)output)->write("test", 40, 55);
+    pName->readdSubs();
+    pName->add(pName2);
+    pName->readdSubs();
+    pName2->readdSubs();
+
+    Singl* n = pName;
+    while(n) {
+        std::cout << "n: " << n->get_time() << std::endl;
+        n = n->get_next();
+    }; 
+    
+    pName->process(t);
+
+    ((file_aO*)output)->write("test", 0, 10);
     std::cout << "succes\n";
+    delete output;
+    delete pName;
 };

@@ -22,20 +22,23 @@ public:
 
     // linked list functions:
     Singl* add(Singl* newSingl, int dir=0); 
-    Singl* add_sub(Singl* newSub, int dir=0);
     void prepend(Singl* newSingl); 
-    void prepend_sub(Singl* newSub); 
     void append(Singl* newSingl); 
-    void append_sub(Singl* newSub); 
     Singl* set_prev(Singl* new_prev);
-    Singl* set_psub(Singl* new_psub);
     Singl* set_next(Singl* new_next);
-    Singl* set_nsub(Singl* new_nsub);
     Singl* get_prev();
     Singl* get_next();
+    // sub singularities:
+    Singl* add_sub(Singl* newSub, int dir=0);
+    void prepend_sub(Singl* newSub); 
+    void append_sub(Singl* newSub); 
+    Singl* set_psub(Singl* new_psub);
+    Singl* set_nsub(Singl* new_nsub);
     Singl* get_nsub();
+    Singl* get_psub();
+    void readdSubs();
+    void removeFromList();
 
-    
 protected:
     unsigned long t0;   // start-time
 

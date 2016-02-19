@@ -4,22 +4,28 @@
 #include "aconv.h"
 #include "singl.h"
 
-#define so_simpleSine_ARGCOUNT 3
+#define so_printName_ARGCOUNT 2
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-class s_simpleSine : public Singl {
+class s_printName : public Singl {
 public:
-    s_simpleSine(unsigned long t0, int argc, void** argv);
+    s_printName(unsigned long t0, int argc, void** argv);
+    void addSubs();
     void proc();
+private:
+    unsigned long N;
+    int argc;
+    void** argv;
+    char* name;
 };
 
-s_simpleSine* con_simpleSine(unsigned long t0, int argc, void** argv) {
-    return new s_simpleSine(t0, argc, argv);
+s_printName* con_printName(unsigned long t0, int argc, void** argv) {
+    return new s_printName(t0, argc, argv);
 };
-void des_simpleSine(s_simpleSine* obj) {
+void des_printName(s_printName* obj) {
     delete obj;
 };
 
@@ -27,39 +33,38 @@ void des_simpleSine(s_simpleSine* obj) {
 }
 #endif
 
-s_simpleSine::s_simpleSine(unsigned long t0, int argc, void** argv) : Singl(t0, 0, NULL) {
-    if(argc < so_simpleSine_ARGCOUNT) {
+void s_printName::addSubs() {
+    for(unsigned long n=0; n<N; ++n) {
+        void** nargv = new void*[2];            
+        unsigned long i = 0;
+        nargv[0] = (void*) &i;
+        nargv[1] = argv[1];
+        Singl* print = new s_printName(t0+n, 2, nargv);
+        if(n == 0) {
+            sub = print;
+        } else {
+            sub->add_sub(print);
+        };
+    };     
+
+
+}
+
+s_printName::s_printName(unsigned long t0, int argc, void** argv) : Singl(t0, 0, NULL) {
+    if(argc < so_printName_ARGCOUNT) {
         // $TODO: throw error:
         std::cout << "throw error\n";
     } else {
-        unsigned long N = *((unsigned long*) argv[0]);
-        std::cout << "N: " << N << std::endl;
-        double freq = *((double*) argv[1]);
-        std::cout << "freq: " << freq << std::endl;
-        aOut* aout = (aOut*) argv[2];
-        for(unsigned long n=0; n<N; ++n) {
-            std::cout << "sample: " << n << " / " << N << std::endl;
-            void** nargv = new void*[2];
-            
-            long* val = new long[CHNN];
-            for(unsigned long c=0; c<CHNN; ++c)
-                val[c] = (long)std::sin((M_PI+M_PI) * freq * (long double)n / (long double)FS);
-            nargv[0] = val;
-            nargv[1] = argv[2];
-            std::cout << "sending to sample\n";
-            Sample* sample = new Sample(t0+n, 2, argv);
-            if(n == 0) {
-                next = sample;
-                sub = sample;
-            } else {
-                this->add(sample);
-                sub->add_sub(sample);
-            };
-        };     
-        std::cout << "constructed\n";
+        N = *((unsigned long*) argv[0]);
+        this->argc = argc;
+        this->argv = argv;
+        name = (char*) argv[1];
+        
+        addSubs();
+       std::cout << "constructed\n";
     };   
 };
 
-void s_simpleSine::proc() {
-     
+void s_printName::proc() {
+    std::cout << "printName: " << name << " (t: " << this->get_time() << "\n";
 };
