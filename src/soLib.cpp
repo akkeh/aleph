@@ -1,54 +1,65 @@
-
 #include <cmath>
+#include <iostream>
 
 #include "aconv.h"
-#include "proc.h"
 #include "singl.h"
 
-#define so_playSine_ARGCOUNT 2
+#define so_simpleSine_ARGCOUNT 3
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-class p_playSine : public proc {
-    p_playSine(double freq, unsigned long length);
-
-    void add(); // add singl
-     
-    void remove();  // remove singl
-
-protected:
-    // stuff for the sine:
-    long* data;    // buffer to hold the data
-    unsigned long N;
-    int bitdepth;
+class s_simpleSine : public Singl {
+public:
+    s_simpleSine(unsigned long t0, int argc, void** argv);
+    void proc();
 };
 
+s_simpleSine* con_simpleSine(unsigned long t0, int argc, void** argv) {
+    return new s_simpleSine(t0, argc, argv);
+};
+void des_simpleSine(s_simpleSine* obj) {
+    delete obj;
+};
 
 #ifdef __cplusplus
 }
 #endif
 
-p_playSine::p_playSine() {
-    bitdepth = std::pow(2, BITDEPTH);
+s_simpleSine::s_simpleSine(unsigned long t0, int argc, void** argv) : Singl(t0, 0, NULL) {
+    if(argc < so_simpleSine_ARGCOUNT) {
+        // $TODO: throw error:
+        std::cout << "throw error\n";
+    } else {
+        unsigned long N = *((unsigned long*) argv[0]);
+        std::cout << "N: " << N << std::endl;
+        double freq = *((double*) argv[1]);
+        std::cout << "freq: " << freq << std::endl;
+        aOut* aout = (aOut*) argv[2];
+        for(unsigned long n=0; n<N; ++n) {
+            std::cout << "sample: " << n << " / " << N << std::endl;
+            void** nargv = new void*[2];
+            
+            long* val = new long[CHNN];
+            for(unsigned long c=0; c<CHNN; ++c)
+                val[c] = (long)std::sin((M_PI+M_PI) * freq * (long double)n / (long double)FS);
+            nargv[0] = val;
+            nargv[1] = argv[2];
+            std::cout << "sending to sample\n";
+            Sample* sample = new Sample(t0+n, 2, argv);
+            if(n == 0) {
+                next = sample;
+                sub = sample;
+            } else {
+                this->add(sample);
+                sub->add_sub(sample);
+            };
+        };     
+        std::cout << "constructed\n";
+    };   
 };
 
-void p_playSine::add(int argc, void** argv) {
-    /*
-        [N, freq]
-            variable sinus dmv bus in argv?
-    */
-    if(argc < so_playSine_ARGCOUNT) {
-        return -1;
-    };
-    N = (unsigned long) argv[0];
-    double freq = (double) argv[1];
-    data = new long[N];
-    for(unsigned long n=0; n<N; ++n) 
-        data[n] = (long)(std::sin((M_PI+M_PI) * freq * n / FS) * bitdepth);
-};
-
-void p_playSine::remove() {
-
+void s_simpleSine::proc() {
+     
 };

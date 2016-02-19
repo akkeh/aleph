@@ -18,6 +18,7 @@ void aOut::add(unsigned long n, long* val) {
 
 // file_aO ----------------------------------------------------|
 file_aO::file_aO() {
+    std::cout << "Initialising output buffer....\n";
     N = OFFLINE_BUFN;
     chnn = CHNN;
     buf = new long[OFFLINE_BUFN * CHNN];

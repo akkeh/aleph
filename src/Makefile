@@ -12,7 +12,7 @@ main: ${OBJ}
 	${CC} -c $< ${CFlAGS}
 
 lib: soLib.cpp
-	${CC} -shared -fPIC -o soLib.so soLib.cpp
+	${CC} -shared -fPIC -o soLib.so soLib.cpp singl.cpp atime.cpp
 
 clean:
 	rm -rf *.o

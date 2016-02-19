@@ -10,7 +10,7 @@
 
 class Singl {
 public:
-    Singl(unsigned long t_t0);
+    Singl(unsigned long t_t0, int argc, void** argv);
     ~Singl();
      
     int process(Time* t);
@@ -21,30 +21,47 @@ public:
     unsigned long get_time();  
 
     // linked list functions:
-    Singl* add(Singl* singl, int dir=0); 
-    void prepend(Singl* singl); 
-    void append(Singl* singl); 
+    Singl* add(Singl* newSingl, int dir=0); 
+    Singl* add_sub(Singl* newSub, int dir=0);
+    void prepend(Singl* newSingl); 
+    void prepend_sub(Singl* newSub); 
+    void append(Singl* newSingl); 
+    void append_sub(Singl* newSub); 
     Singl* set_prev(Singl* new_prev);
+    Singl* set_psub(Singl* new_psub);
     Singl* set_next(Singl* new_next);
+    Singl* set_nsub(Singl* new_nsub);
     Singl* get_prev();
     Singl* get_next();
+    Singl* get_nsub();
 
+    
 protected:
     unsigned long t0;   // start-time
 
     // linked list stuff:
     Singl* prev;
     Singl* next;
-    
+    // sub singularities:    
+    Singl* sub;
+    Singl* psub;
+    Singl* nsub;
 }; 
 
-class sample : public Singl {
+class Sample : public Singl {
 public:
-    sample(unsigned long t_t0, long* t_val, aOut* t_aout);
+    //Sample(unsigned long t_t0, long* val, aOut* aout);
+    Sample(unsigned long t_t0, int argc, void** argv);
     void proc(); 
 private:
     long* val;
     aOut* aout;
 
 };
+
+
+// typedefs:
+typedef Singl* (*Singl_constr)(unsigned long t0, int argc, void** argv);
+typedef void (*Singl_destr)(Singl* singl);
+
 #endif
