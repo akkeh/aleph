@@ -1,2 +1,5 @@
+
+Make sure the sub-singularities are added correctly:
 -   a sort function to be called each time a Singl is added?
     Singl* Singl::sort();   // returns: first Singl in list
+
